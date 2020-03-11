@@ -24,6 +24,7 @@
     "check-coverage": true
   },
   "devDependencies": {
+    "require-inject": "^1.4.4",
     "tap": "^14.10.6"
   },
   "dependencies": {
