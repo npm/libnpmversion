@@ -6,7 +6,8 @@ const index = requireInject('../lib/index.js', {
   '../lib/read-json.js': () => ({ name: 'package from rj' }),
 })
 
-t.cleanSnapshot = s => s.split(process.cwd()).join('{CWD}')
+const cwdRe = new RegExp(process.cwd().replace(/[\\\/:]/g, '\\$&'), 'gi')
+t.cleanSnapshot = s => s.replace(cwdRe, '{CWD}')
 
 t.test('all the defaults', async t =>
   t.matchSnapshot(await index('from-git')))
