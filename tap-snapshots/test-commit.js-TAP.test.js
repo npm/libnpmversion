@@ -7,7 +7,6 @@
 'use strict'
 exports[`test/commit.js TAP generate args from options > default options 1`] = `
 Array [
-  "commit",
   "-m",
   "v1.2.3",
 ]
@@ -15,7 +14,6 @@ Array [
 
 exports[`test/commit.js TAP generate args from options > non-default options 1`] = `
 Array [
-  "commit",
   "-n",
   "--allow-empty",
   "-S",
