@@ -26,8 +26,8 @@ npmVersion(arg, {
   force: false, // push forward recklessly if any problems happen
   ignoreScripts: false, // do not run pre/post/version lifecycle scripts
   message: 'v%s', // message for tag and commit, replace %s with the version
-}).then(pkg => {
-  console.error('version updated!', pkg)
+}).then(newVersion => {
+  console.error('version updated!', newVersion)
 })
 ```
 
@@ -100,9 +100,9 @@ deletes the `build/temp` directory.
 
 ## API
 
-### `npmVersion(newversion, options = {}) -> Promise`
+### `npmVersion(newversion, options = {}) -> Promise<String>`
 
-Do the things.  Returns a promise that resolves to the package manifest if
+Do the things.  Returns a promise that resolves to the new version if
 all is well, or rejects if any errors are encountered.
 
 ### Options

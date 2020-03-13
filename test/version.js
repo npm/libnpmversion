@@ -49,7 +49,7 @@ t.test('test out bumping the version in all the ways', async t => {
     t.afterEach(async () => actionLog.length = 0)
     const path = `${dir}/git`
     await t.test('major', async t => {
-      await version('major', { path, log, pkg })
+      t.equal(await version('major', { path, log, pkg }), '2.0.0')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '1.2.0', npm_new_version: '2.0.0'} ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -63,7 +63,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '2.0.0')
     })
     await t.test('minor (ignore scripts)', async t => {
-      await version('minor', { path, log, pkg, ignoreScripts: true })
+      t.equal(await version('minor', { path, log, pkg, ignoreScripts: true }), '2.1.0')
       t.match(actionLog, [
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/package-lock.json', pkg ],
@@ -74,7 +74,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '2.1.0')
     })
     await t.test('patch', async t => {
-      await version('patch', { path, log, pkg })
+      t.equal(await version('patch', { path, log, pkg }), '2.1.1')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '2.1.0', npm_new_version: '2.1.1' } ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -88,7 +88,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '2.1.1')
     })
     await t.test('pre', async t => {
-      await version('pre', { path, log, pkg })
+      t.equal(await version('pre', { path, log, pkg }), '2.1.1-0')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '2.1.1', npm_new_version: '2.1.1-0' } ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -102,7 +102,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '2.1.1-0')
     })
     await t.test('pre with preid', async t => {
-      await version('pre', { path, log, preid: 'alpha', pkg })
+      t.equal(await version('pre', { path, log, preid: 'alpha', pkg }), '2.1.1-alpha.0')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '2.1.1-0', npm_new_version: '2.1.1-alpha.0' } ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -116,7 +116,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '2.1.1-alpha.0')
     })
     await t.test('explicit version', async t => {
-      await version('=v3.2.1', { path, log, pkg })
+      t.equal(await version('=v3.2.1', { path, log, pkg }), '3.2.1')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '2.1.1-alpha.0', npm_new_version: '3.2.1' } ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -145,7 +145,7 @@ t.test('test out bumping the version in all the ways', async t => {
       })
     })
     await t.test('same version, is allowed', async t => {
-      await version('=v3.2.1', { path, log, pkg, allowSameVersion: true })
+      t.equal(await version('=v3.2.1', { path, log, pkg, allowSameVersion: true }), '3.2.1')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' } ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -159,7 +159,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '3.2.1')
     })
     await t.test('from git', async t => {
-      await version('from-git', { path, log, pkg })
+      t.equal(await version('from-git', { path, log, pkg }), '1.2.3')
       t.match(actionLog, [
         [ 'retrieve-tag', { path, pkg } ],
         [ 'run-script', 'preversion', { npm_old_version: '3.2.1', npm_new_version: '1.2.3' } ],
@@ -180,7 +180,7 @@ t.test('test out bumping the version in all the ways', async t => {
     t.afterEach(async () => actionLog.length = 0)
     const path = `${dir}/not-git`
     await t.test('major', async t => {
-      await version('major', { path, log, pkg })
+      t.equal(await version('major', { path, log, pkg }), '2.0.0')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '1.2.0', npm_new_version: '2.0.0'} ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -192,7 +192,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '2.0.0')
     })
     await t.test('minor (ignore scripts)', async t => {
-      await version('minor', { path, log, pkg, ignoreScripts: true })
+      t.equal(await version('minor', { path, log, pkg, ignoreScripts: true }), '2.1.0')
       t.match(actionLog, [
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/npm-shrinkwrap.json', pkg ],
@@ -201,7 +201,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '2.1.0')
     })
     await t.test('patch', async t => {
-      await version('patch', { path, log, pkg })
+      t.equal(await version('patch', { path, log, pkg }), '2.1.1')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '2.1.0', npm_new_version: '2.1.1' } ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -213,7 +213,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '2.1.1')
     })
     await t.test('pre', async t => {
-      await version('pre', { path, log, pkg })
+      t.equal(await version('pre', { path, log, pkg }), '2.1.1-0')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '2.1.1', npm_new_version: '2.1.1-0' } ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -225,7 +225,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '2.1.1-0')
     })
     await t.test('pre with preid', async t => {
-      await version('pre', { path, log, preid: 'alpha', pkg })
+      t.equal(await version('pre', { path, log, preid: 'alpha', pkg }), '2.1.1-alpha.0')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '2.1.1-0', npm_new_version: '2.1.1-alpha.0' } ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -237,7 +237,7 @@ t.test('test out bumping the version in all the ways', async t => {
       t.equal(pkg.version, '2.1.1-alpha.0')
     })
     await t.test('explicit version', async t => {
-      await version('=v3.2.1', { path, log, pkg })
+      t.equal(await version('=v3.2.1', { path, log, pkg }), '3.2.1')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '2.1.1-alpha.0', npm_new_version: '3.2.1' } ],
         [ 'write-json', path + '/package.json', pkg ],
@@ -264,7 +264,7 @@ t.test('test out bumping the version in all the ways', async t => {
       })
     })
     await t.test('same version, is allowed', async t => {
-      await version('=v3.2.1', { path, log, pkg, allowSameVersion: true })
+      t.equal(await version('=v3.2.1', { path, log, pkg, allowSameVersion: true }), '3.2.1')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' } ],
         [ 'write-json', path + '/package.json', pkg ],
