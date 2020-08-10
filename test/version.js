@@ -41,8 +41,13 @@ t.test('test out bumping the version in all the ways', async t => {
       'package-lock.json': JSON.stringify(lock, null, 2),
     },
     'not-git': {
-      'npm-shrinkwrap.json': JSON.stringify(lock, null, 2),
-    }
+      'npm-shrinkwrap.json': JSON.stringify({
+        ...lock,
+        packages: {
+          '': { ...pkg },
+        },
+      }, null, 2),
+    },
   })
 
   await t.test('git dir', async t => {
