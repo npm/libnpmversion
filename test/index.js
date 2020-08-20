@@ -1,9 +1,15 @@
 // just verify it sets up the default options correctly
 const t = require('tap')
 const requireInject = require('require-inject')
+const kIndent = Symbol.for('indent')
+const kNewline = Symbol.for('newline')
 const index = requireInject('../lib/index.js', {
   '../lib/version.js': (newversion, opts) => [newversion, opts],
-  '../lib/read-json.js': () => ({ name: 'package from rj' }),
+  'read-package-json-fast': () => ({
+    name: 'package from rj',
+    [kIndent]: '  ',
+    [kNewline]: '\n',
+  }),
 })
 
 t.cleanSnapshot = s => s.split(process.cwd()).join('{CWD}')
