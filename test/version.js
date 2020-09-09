@@ -7,6 +7,11 @@ const log = {
   verbose: (...msg) => actionLog.push(['verbose', ...msg]),
 }
 
+const gitMock = {
+  is: async opts => !/\bnot-git$/.test(opts.path),
+  spawn: async (args, opts) => actionLog.push(['spawn', args, opts])
+}
+
 const version = requireInject('../lib/version.js', {
   '../lib/enforce-clean.js': async () => true,
   '../lib/write-json.js': async (file, data) => actionLog.push(['write-json', file, data]),
@@ -18,10 +23,7 @@ const version = requireInject('../lib/version.js', {
     actionLog.push(['retrieve-tag', opts])
     return '1.2.3'
   },
-  '@npmcli/git': {
-    is: async opts => !/\bnot-git$/.test(opts.path),
-    spawn: async (args, opts) => actionLog.push(['spawn', args, opts])
-  },
+  '@npmcli/git': gitMock,
   '@npmcli/run-script': async opt => actionLog.push(['run-script', opt.event, opt.env]),
 })
 
@@ -54,13 +56,21 @@ t.test('test out bumping the version in all the ways', async t => {
     t.afterEach(async () => actionLog.length = 0)
     const path = `${dir}/git`
     await t.test('major', async t => {
+      // for this one, let's pretend that the package-lock.json is .gitignored
+      const { spawn } = gitMock
+      t.teardown(() => gitMock.spawn = spawn)
+      gitMock.spawn = async (args, opts) => {
+        if (args[0] !== 'add' || !args.some(a => /package-lock\.json$/.test(a)))
+          return spawn(args, opts)
+        throw new Error('no addy the locky fiel please & thanky i ignoring it')
+      }
       t.equal(await version('major', { path, log, pkg }), '2.0.0')
       t.match(actionLog, [
         [ 'run-script', 'preversion', { npm_old_version: '1.2.0', npm_new_version: '2.0.0'} ],
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/package-lock.json', pkg ],
         [ 'run-script', 'version', { npm_old_version: '1.2.0', npm_new_version: '2.0.0'} ],
-        [ 'spawn', [ 'add', path + '/package.json', path + '/package-lock.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package.json' ], { path, pkg } ],
         [ 'commit', '2.0.0', { path, pkg, } ],
         [ 'tag', '2.0.0', { path, pkg, } ],
         [ 'run-script', 'postversion', { npm_old_version: '1.2.0', npm_new_version: '2.0.0'} ],
@@ -72,7 +82,8 @@ t.test('test out bumping the version in all the ways', async t => {
       t.match(actionLog, [
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/package-lock.json', pkg ],
-        [ 'spawn', [ 'add', path + '/package.json', path + '/package-lock.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package-lock.json' ], { path, pkg } ],
         [ 'commit', '2.1.0', { path, pkg, } ],
         [ 'tag', '2.1.0', { path, pkg, } ],
       ])
@@ -85,7 +96,8 @@ t.test('test out bumping the version in all the ways', async t => {
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/package-lock.json', pkg ],
         [ 'run-script', 'version', { npm_old_version: '2.1.0', npm_new_version: '2.1.1' } ],
-        [ 'spawn', [ 'add', path + '/package.json', path + '/package-lock.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package-lock.json' ], { path, pkg } ],
         [ 'commit', '2.1.1', { path, pkg, } ],
         [ 'tag', '2.1.1', { path, pkg, } ],
         [ 'run-script', 'postversion', { npm_old_version: '2.1.0', npm_new_version: '2.1.1' } ],
@@ -99,7 +111,8 @@ t.test('test out bumping the version in all the ways', async t => {
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/package-lock.json', pkg ],
         [ 'run-script', 'version', { npm_old_version: '2.1.1', npm_new_version: '2.1.1-0' } ],
-        [ 'spawn', [ 'add', path + '/package.json', path + '/package-lock.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package-lock.json' ], { path, pkg } ],
         [ 'commit', '2.1.1-0', { path, pkg, } ],
         [ 'tag', '2.1.1-0', { path, pkg, } ],
         [ 'run-script', 'postversion', { npm_old_version: '2.1.1', npm_new_version: '2.1.1-0' } ],
@@ -113,7 +126,8 @@ t.test('test out bumping the version in all the ways', async t => {
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/package-lock.json', pkg ],
         [ 'run-script', 'version', { npm_old_version: '2.1.1-0', npm_new_version: '2.1.1-alpha.0' } ],
-        [ 'spawn', [ 'add', path + '/package.json', path + '/package-lock.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package-lock.json' ], { path, pkg } ],
         [ 'commit', '2.1.1-alpha.0', { path, pkg, } ],
         [ 'tag', '2.1.1-alpha.0', { path, pkg, } ],
         [ 'run-script', 'postversion', { npm_old_version: '2.1.1-0', npm_new_version: '2.1.1-alpha.0' } ],
@@ -127,7 +141,8 @@ t.test('test out bumping the version in all the ways', async t => {
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/package-lock.json', pkg ],
         [ 'run-script', 'version', { npm_old_version: '2.1.1-alpha.0', npm_new_version: '3.2.1' } ],
-        [ 'spawn', [ 'add', path + '/package.json', path + '/package-lock.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package-lock.json' ], { path, pkg } ],
         [ 'commit', '3.2.1', { path, pkg, } ],
         [ 'tag', '3.2.1', { path, pkg, } ],
         [ 'run-script', 'postversion', { npm_old_version: '2.1.1-alpha.0', npm_new_version: '3.2.1' } ],
@@ -156,7 +171,8 @@ t.test('test out bumping the version in all the ways', async t => {
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/package-lock.json', pkg ],
         [ 'run-script', 'version', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' } ],
-        [ 'spawn', [ 'add', path + '/package.json', path + '/package-lock.json' ], { path, pkg, allowSameVersion: true } ],
+        [ 'spawn', [ 'add', path + '/package.json' ], { path, pkg, allowSameVersion: true } ],
+        [ 'spawn', [ 'add', path + '/package-lock.json' ], { path, pkg, allowSameVersion: true } ],
         [ 'commit', '3.2.1', { path, pkg, allowSameVersion: true } ],
         [ 'tag', '3.2.1', { path, pkg, allowSameVersion: true } ],
         [ 'run-script', 'postversion', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' } ],
@@ -171,7 +187,8 @@ t.test('test out bumping the version in all the ways', async t => {
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/package-lock.json', pkg ],
         [ 'run-script', 'version', { npm_old_version: '3.2.1', npm_new_version: '1.2.3' } ],
-        [ 'spawn', [ 'add', path + '/package.json', path + '/package-lock.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package-lock.json' ], { path, pkg } ],
         [ 'commit', '1.2.3', { path, pkg } ],
         [ 'tag', '1.2.3', { path, pkg } ],
         [ 'run-script', 'postversion', { npm_old_version: '3.2.1', npm_new_version: '1.2.3' } ],
