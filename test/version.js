@@ -204,6 +204,22 @@ t.test('test out bumping the version in all the ways', async t => {
       ])
       t.equal(pkg.version, '1.2.3')
     })
+    await t.test('no current version', async t => {
+      delete pkg.version
+      t.equal(await version('2.3.4', { path, log, pkg, gitTagVersion: true }), '2.3.4')
+      t.match(actionLog, [
+        [ 'run-script', 'preversion', { npm_old_version: '0.0.0', npm_new_version: '2.3.4' } ],
+        [ 'write-json', path + '/package.json', pkg ],
+        [ 'write-json', path + '/package-lock.json', pkg ],
+        [ 'run-script', 'version', { npm_old_version: '0.0.0', npm_new_version: '2.3.4' } ],
+        [ 'spawn', [ 'add', path + '/package.json' ], { path, pkg } ],
+        [ 'spawn', [ 'add', path + '/package-lock.json' ], { path, pkg } ],
+        [ 'commit', '2.3.4', { path, pkg } ],
+        [ 'tag', '2.3.4', { path, pkg } ],
+        [ 'run-script', 'postversion', { npm_old_version: '0.0.0', npm_new_version: '2.3.4' } ],
+      ])
+      t.equal(pkg.version, '2.3.4')
+    })
   })
 
   await t.test('not a git dir', async t => {
