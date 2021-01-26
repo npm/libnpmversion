@@ -31,6 +31,7 @@ t.test('set the package ahead of time', async t =>
     signGitTag: true,
     force: true,
     ignoreScripts: true,
+    scriptShell: "/bin/bash",
     preid: 'rc',
     log: {},
     message: 'hello, i have a message for you',
