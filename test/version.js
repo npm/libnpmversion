@@ -24,7 +24,7 @@ const version = requireInject('../lib/version.js', {
     return '1.2.3'
   },
   '@npmcli/git': gitMock,
-  '@npmcli/run-script': async opt => actionLog.push(['run-script', opt.event, opt.env]),
+  '@npmcli/run-script': async opt => actionLog.push(['run-script', opt.event, opt.env, opt]),
 })
 
 t.test('test out bumping the version in all the ways', async t => {
@@ -313,12 +313,24 @@ t.test('test out bumping the version in all the ways', async t => {
     await t.test('same version, is allowed', async t => {
       t.equal(await version('=v3.2.1', { path, log, pkg, allowSameVersion: true }), '3.2.1')
       t.match(actionLog, [
-        [ 'run-script', 'preversion', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' } ],
+        [ 'run-script', 'preversion', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' }, { banner: true } ],
         [ 'write-json', path + '/package.json', pkg ],
         [ 'write-json', path + '/npm-shrinkwrap.json', pkg ],
-        [ 'run-script', 'version', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' } ],
+        [ 'run-script', 'version', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' }, { banner: true } ],
         [ 'verbose', 'version', 'Not tagging: not in a git repo or no git cmd' ],
-        [ 'run-script', 'postversion', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' } ],
+        [ 'run-script', 'postversion', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' }, { banner: true } ],
+      ])
+      t.equal(pkg.version, '3.2.1')
+    })
+    await t.test('same version, is allowed (silent mode)', async t => {
+      t.equal(await version('=v3.2.1', { path, log: { ...log, level: 'silent' } , pkg, allowSameVersion: true }), '3.2.1')
+      t.match(actionLog, [
+        [ 'run-script', 'preversion', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' }, { banner: false } ],
+        [ 'write-json', path + '/package.json', pkg ],
+        [ 'write-json', path + '/npm-shrinkwrap.json', pkg ],
+        [ 'run-script', 'version', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' }, { banner: false } ],
+        [ 'verbose', 'version', 'Not tagging: not in a git repo or no git cmd' ],
+        [ 'run-script', 'postversion', { npm_old_version: '3.2.1', npm_new_version: '3.2.1' }, { banner: false } ],
       ])
       t.equal(pkg.version, '3.2.1')
     })
