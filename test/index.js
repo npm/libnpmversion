@@ -5,7 +5,7 @@ const kIndent = Symbol.for('indent')
 const kNewline = Symbol.for('newline')
 const index = requireInject('../lib/index.js', {
   '../lib/version.js': (newversion, opts) => [newversion, opts],
-  'read-package-json-fast': () => ({
+  'read-package-json': (_pkg, cb) => cb(null, {
     name: 'package from rj',
     [kIndent]: '  ',
     [kNewline]: '\n',
