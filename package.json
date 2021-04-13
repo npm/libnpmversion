@@ -21,6 +21,11 @@
     "postversion": "npm publish",
     "prepublishOnly": "git push origin --follow-tags"
   },
+  "standard": {
+    "ignore": [
+      "tap-snapshots"
+    ]
+  },
   "tap": {
     "coverage-map": "map.js",
     "check-coverage": true

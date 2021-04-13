@@ -5,7 +5,7 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
-exports['test/index.js TAP all the defaults > must match snapshot 1'] = `
+exports[`test/index.js TAP all the defaults > must match snapshot 1`] = `
 Array [
   "from-git",
   Object {
@@ -40,7 +40,7 @@ Array [
 ]
 `
 
-exports['test/index.js TAP set the package ahead of time > must match snapshot 1'] = `
+exports[`test/index.js TAP set the package ahead of time > must match snapshot 1`] = `
 Array [
   "major",
   Object {
