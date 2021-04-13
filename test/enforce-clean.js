@@ -24,12 +24,12 @@ const log = { warn: (...msg) => warnings.push(msg) }
 t.test('clean, ok', t =>
   t.resolveMatch(enforceClean({ log, cwd: 'clean' }), true)
     .then(() => t.strictSame(warnings, []))
-    .then(() => warnings.length = 0))
+    .then(() => { warnings.length = 0 }))
 
 t.test('unclean, no force, throws', t =>
   t.rejects(enforceClean({ log, cwd: 'unclean' }))
     .then(() => t.strictSame(warnings, []))
-    .then(() => warnings.length = 0))
+    .then(() => { warnings.length = 0 }))
 
 t.test('unclean, forced, no throw', t =>
   t.resolveMatch(enforceClean({ log, cwd: 'unclean', force: true }), true)
@@ -39,7 +39,7 @@ t.test('unclean, forced, no throw', t =>
         'Git working directory not clean, proceeding forcefully.'
       ]
     ]))
-    .then(() => warnings.length = 0))
+    .then(() => { warnings.length = 0 }))
 
 t.test('nogit, return false, no throw', t =>
   t.resolveMatch(enforceClean({ log, cwd: 'nogit' }), false)
@@ -50,9 +50,9 @@ t.test('nogit, return false, no throw', t =>
         'npm could not create a Git tag for this release!'
       ]
     ]))
-    .then(() => warnings.length = 0))
+    .then(() => { warnings.length = 0 }))
 
 t.test('other error, throw it', t =>
   t.rejects(enforceClean({ log, cwd: 'error' }), new Error('poop'))
     .then(() => t.strictSame(warnings, []))
-    .then(() => warnings.length = 0))
+    .then(() => { warnings.length = 0 }))

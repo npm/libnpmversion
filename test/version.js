@@ -52,12 +52,12 @@ t.test('test out bumping the version in all the ways', async t => {
   })
 
   await t.test('git dir', async t => {
-    t.afterEach(async () => actionLog.length = 0)
+    t.afterEach(async () => { actionLog.length = 0 })
     const path = `${dir}/git`
     await t.test('major', async t => {
       // for this one, let's pretend that the package-lock.json is .gitignored
       const { spawn } = gitMock
-      t.teardown(() => gitMock.spawn = spawn)
+      t.teardown(() => { gitMock.spawn = spawn })
       gitMock.spawn = async (args, opts) => {
         if (args[0] !== 'add' || !args.some(a => /package-lock\.json$/.test(a))) { return spawn(args, opts) }
         throw new Error('no addy the locky fiel please & thanky i ignoring it')
@@ -222,7 +222,7 @@ t.test('test out bumping the version in all the ways', async t => {
 
   await t.test('not a git dir', async t => {
     pkg.version = '1.2.0'
-    t.afterEach(async () => actionLog.length = 0)
+    t.afterEach(async () => { actionLog.length = 0 })
     const path = `${dir}/not-git`
     await t.test('major', async t => {
       t.equal(await version('major', { path, log, pkg }), '2.0.0')
