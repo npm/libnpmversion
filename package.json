@@ -13,6 +13,8 @@
   "author": "Isaac Z. Schlueter <i@izs.me> (https://izs.me)",
   "license": "ISC",
   "scripts": {
+    "lint": "standard",
+    "lint:fix": "standard --fix",
     "test": "tap",
     "snap": "tap",
     "preversion": "npm test",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "require-inject": "^1.4.4",
+    "standard": "^16.0.3",
     "tap": "^14.11.0"
   },
   "dependencies": {

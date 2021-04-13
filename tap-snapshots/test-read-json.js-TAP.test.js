@@ -5,14 +5,14 @@
  * Make sure to inspect the output below.  Do not ignore changes!
  */
 'use strict'
-exports[`test/read-json.js TAP do not strip or mutate anything > crlf-tabs.json 1`] = `
+exports['test/read-json.js TAP do not strip or mutate anything > crlf-tabs.json 1'] = `
 Object {
   "name": "curly leaflets tabula rasa",
   "version": "9",
 }
 `
 
-exports[`test/read-json.js TAP do not strip or mutate anything > package.json 1`] = `
+exports['test/read-json.js TAP do not strip or mutate anything > package.json 1'] = `
 Object {
   "_someField": "someValue",
   "bin": "../../../../../../etc/passwd",
@@ -20,7 +20,7 @@ Object {
 }
 `
 
-exports[`test/read-json.js TAP do not strip or mutate anything > space-tabs.json 1`] = `
+exports['test/read-json.js TAP do not strip or mutate anything > space-tabs.json 1'] = `
 Object {
   "name": "spacetabular",
   "version": "9000.0.1",
