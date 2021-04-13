@@ -60,6 +60,9 @@ jobs:
       - name: Run tests
         run: npm test -- --no-coverage
 
+      - name: Run linting
+        run: npm run lint
+
       ################################################################################
       # Run coverage check
       #
