@@ -8,8 +8,8 @@ const index = requireInject('../lib/index.js', {
   '../lib/read-json.js': () => ({
     name: 'package from rj',
     [kIndent]: '  ',
-    [kNewline]: '\n',
-  }),
+    [kNewline]: '\n'
+  })
 })
 
 t.cleanSnapshot = s => s.split(process.cwd()).join('{CWD}')
@@ -31,9 +31,9 @@ t.test('set the package ahead of time', async t =>
     signGitTag: true,
     force: true,
     ignoreScripts: true,
-    scriptShell: "/bin/bash",
+    scriptShell: '/bin/bash',
     preid: 'rc',
     log: {},
     message: 'hello, i have a message for you',
-    someOtherRandomField: 'this should not show up',
+    someOtherRandomField: 'this should not show up'
   })))

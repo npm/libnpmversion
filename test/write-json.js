@@ -4,7 +4,7 @@ const fs = require('fs')
 const writeJson = requireInject('../lib/write-json.js', {
   fs: {
     ...fs,
-    writeFile: (path, data, cb) => cb(null, [path, data]),
+    writeFile: (path, data, cb) => cb(null, [path, data])
   }
 })
 
@@ -16,11 +16,11 @@ t.test('write json with newlines and indent set', async t => {
     [kNewline]: '\r\n',
     [kIndent]: 3,
     a: 1,
-    b: [ 2, 3 ],
+    b: [2, 3]
   }), [
     'x',
     '{\r\n' +
-    '   "a": 1,\r\n'+
+    '   "a": 1,\r\n' +
     '   "b": [\r\n' +
     '      2,\r\n' +
     '      3\r\n' +
@@ -32,11 +32,11 @@ t.test('write json with newlines and indent set', async t => {
     [kNewline]: 'XYZ\n',
     [kIndent]: '\t',
     a: 1,
-    b: [ 2, 3 ],
+    b: [2, 3]
   }), [
     'x',
     '{XYZ\n' +
-    '\t"a": 1,XYZ\n'+
+    '\t"a": 1,XYZ\n' +
     '\t"b": [XYZ\n' +
     '\t\t2,XYZ\n' +
     '\t\t3XYZ\n' +
@@ -46,11 +46,11 @@ t.test('write json with newlines and indent set', async t => {
 
   t.same(await writeJson('x', {
     a: 1,
-    b: [ 2, 3 ],
+    b: [2, 3]
   }), [
     'x',
     '{\n' +
-    '  "a": 1,\n'+
+    '  "a": 1,\n' +
     '  "b": [\n' +
     '    2,\n' +
     '    3\n' +
