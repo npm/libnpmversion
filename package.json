@@ -16,6 +16,7 @@
     "lint": "standard",
     "lint:fix": "standard --fix",
     "test": "tap",
+    "posttest": "npm run lint",
     "snap": "tap",
     "preversion": "npm test",
     "postversion": "npm publish",
