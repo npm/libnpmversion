@@ -1,6 +1,5 @@
 const t = require('tap')
-const requireInject = require('require-inject')
-const enforceClean = requireInject('../lib/enforce-clean.js', {
+const enforceClean = t.mock('../lib/enforce-clean.js', {
   '@npmcli/git': {
     isClean: async ({ cwd }) => {
       switch (cwd) {

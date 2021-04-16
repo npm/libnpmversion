@@ -1,5 +1,4 @@
 const t = require('tap')
-const requireInject = require('require-inject')
 
 const actionLog = []
 
@@ -12,7 +11,7 @@ const gitMock = {
   spawn: async (args, opts) => actionLog.push(['spawn', args, opts])
 }
 
-const version = requireInject('../lib/version.js', {
+const version = t.mock('../lib/version.js', {
   '../lib/enforce-clean.js': async () => true,
   '../lib/write-json.js': async (file, data) => actionLog.push(['write-json', file, data]),
   '../lib/commit.js': async (version, opts) => actionLog.push(['commit', version, opts]),

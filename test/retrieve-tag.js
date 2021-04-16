@@ -1,7 +1,6 @@
 const t = require('tap')
-const requireInject = require('require-inject')
 let tag
-const retrieveTag = requireInject('../lib/retrieve-tag.js', {
+const retrieveTag = t.mock('../lib/retrieve-tag.js', {
   '@npmcli/git': {
     spawn: async (cmd, opts) => ({ stdout: tag + '\n' })
   }

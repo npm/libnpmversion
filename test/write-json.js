@@ -1,7 +1,6 @@
 const t = require('tap')
-const requireInject = require('require-inject')
 const fs = require('fs')
-const writeJson = requireInject('../lib/write-json.js', {
+const writeJson = t.mock('../lib/write-json.js', {
   fs: {
     ...fs,
     writeFile: (path, data, cb) => cb(null, [path, data])

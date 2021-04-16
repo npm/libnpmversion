@@ -1,6 +1,5 @@
 const t = require('tap')
-const requireInject = require('require-inject')
-const commit = requireInject('../lib/commit.js', {
+const commit = t.mock('../lib/commit.js', {
   '@npmcli/git': { spawn: args => args.slice(1) }
 })
 

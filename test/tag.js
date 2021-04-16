@@ -1,6 +1,5 @@
 const t = require('tap')
-const requireInject = require('require-inject')
-const tag = requireInject('../lib/tag.js', {
+const tag = t.mock('../lib/tag.js', {
   '@npmcli/git': { spawn: args => args.slice(1) }
 })
 
