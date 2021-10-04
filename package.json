@@ -42,5 +42,8 @@
     "json-parse-even-better-errors": "^2.3.1",
     "semver": "^7.3.5",
     "stringify-package": "^1.0.1"
+  },
+  "engines": {
+    "node": "^12.13.0 || ^14.15.0 || >=16"
   }
 }
